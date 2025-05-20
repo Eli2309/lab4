@@ -1,4 +1,4 @@
- const data = {
+let data = JSON.parse(localStorage.getItem("cvData")) || {
   name: "Bəhramlı Əli Bəhram",
   title: "Information Security Specialist",
   profile: "Motivated Information Security student with strong interest in ethical hacking, system protection, and cybersecurity.",
@@ -59,6 +59,7 @@ function renderSection(id) {
       const v = prompt("Dəyişmək istədiyiniz mətni yazın:", item);
       if (v) {
         data[id][i] = v;
+        localStorage.setItem("cvData", JSON.stringify(data));
         renderSection(id);
       }
     };
@@ -66,6 +67,7 @@ function renderSection(id) {
     d.textContent = "Delete";
     d.onclick = () => {
       data[id].splice(i, 1);
+      localStorage.setItem("cvData", JSON.stringify(data));
       renderSection(id);
     };
     div.append(span, e, d);
@@ -77,6 +79,7 @@ function addEntry(id) {
   const v = prompt("Yeni məlumat daxil et:");
   if (v) {
     data[id].push(v);
+    localStorage.setItem("cvData", JSON.stringify(data));
     renderSection(id);
   }
 }
@@ -133,7 +136,12 @@ document.getElementById("cvForm").addEventListener("submit", function (e) {
       date: document.getElementById("form-date").value,
       desc: document.getElementById("form-description").value.trim()
     };
-    localStorage.setItem("cvFormData", JSON.stringify(formData));
+    if(data.formData){
+      data.formData.push(formData);
+    }else{
+      data.formData = [formData];
+    }
+    localStorage.setItem("cvFormData", JSON.stringify(data));
     status.textContent = "Uğurla yadda saxlanıldı!";
     status.style.color = "green";
     document.getElementById("cvForm").reset();
